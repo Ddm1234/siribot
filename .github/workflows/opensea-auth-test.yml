@@ -26,7 +26,7 @@ jobs:
             exit 1
           fi
 
-          if echo "$body" | grep -q '"access_token"'; then
+          if echo "$body" | grep -q '"accessToken"'; then
             echo "OpenSea Wallet 1 authentication successful."
           else
             echo "Authentication response did not contain an access token."
