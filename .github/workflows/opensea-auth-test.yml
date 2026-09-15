@@ -15,7 +15,7 @@ jobs:
           response=$(curl -sS -w '\n%{http_code}' \
             -X POST \
             -H "Content-Type: application/json" \
-            -d "{\"grant_type\":\"urn:ietf:params:oauth:grant-type:token-exchange\",\"subject_token\":\"$OPENSEA_WALLET1_PAT\",\"subject_token_type\":\"urn:ietf:params:oauth:token-type:scoped-api-key\"}" \
+            -d "{\"grant_type\":\"urn:ietf:params:oauth:grant-type:token-exchange\",\"subjectToken\":\"$OPENSEA_WALLET1_PAT\",\"subjectTokenType\":\"ACCESS_TOKEN\"}" \
             https://api.opensea.io/api/v2/auth/tokens/exchange)
 
           status=$(echo "$response" | tail -n 1)
