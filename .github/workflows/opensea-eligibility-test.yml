@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test Wallet 1 eligibility
+      - name: Test Wallet 2 eligibility
         env:
-          OPENSEA_WALLET1_PAT: ${{ secrets.OPENSEA_WALLET1_PAT }}
-          OPENSEA_SIRI_API_KEY: ${{ secrets.OPENSEA_SIRI_API_KEY }}
+          OPENSEA_WALLET2_PAT: ${{ secrets.OPENSEA_WALLET2_PAT }}
+          OPENSEA_DHARAM_API_KEY: ${{ secrets.OPENSEA_DHARAM_API_KEY }}
         run: |
           response=$(curl -sS -w '\n%{http_code}' \
             -X POST \
             -H "Content-Type: application/json" \
-            -d "{\"subjectToken\":\"$OPENSEA_WALLET1_PAT\",\"subjectTokenType\":\"ACCESS_TOKEN\"}" \
+            -d "{\"subjectToken\":\"$OPENSEA_WALLET2_PAT\",\"subjectTokenType\":\"ACCESS_TOKEN\"}" \
             https://api.opensea.io/api/v2/auth/tokens/exchange)
 
           status=$(echo "$response" | tail -n 1)
@@ -37,7 +37,7 @@ jobs:
           echo "Wallet authentication successful."
 
           eligibility=$(curl -sS -w '\n%{http_code}' \
-            -H "X-API-KEY: $OPENSEA_SIRI_API_KEY" \
+            -H "X-API-KEY: $OPENSEA_DHARAM_API_KEY" \
             -H "Authorization: Bearer $access_token" \
             "https://api.opensea.io/api/v2/drops/ordem/eligibility")
 
@@ -51,5 +51,5 @@ jobs:
             exit 1
           fi
 
-          echo "Wallet 1 eligibility response:"
+          echo "Wallet 2 eligibility response:"
           echo "$eligibility_body" | jq .
