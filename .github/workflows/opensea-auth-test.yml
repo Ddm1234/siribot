@@ -1,0 +1,34 @@
+name: OpenSea Auth Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test Wallet 1 authentication
+        env:
+          OPENSEA_WALLET1_PAT: ${{ secrets.OPENSEA_WALLET1_PAT }}
+        run: |
+          response=$(curl -sS -w '\n%{http_code}' \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"grant_type\":\"urn:ietf:params:oauth:grant-type:token-exchange\",\"subject_token\":\"$OPENSEA_WALLET1_PAT\",\"subject_token_type\":\"urn:ietf:params:oauth:token-type:scoped-api-key\"}" \
+            https://api.opensea.io/api/v2/auth/tokens/exchange)
+
+          status=$(echo "$response" | tail -n 1)
+          body=$(echo "$response" | sed '$d')
+
+          if [ "$status" != "200" ]; then
+            echo "OpenSea authentication failed. HTTP status: $status"
+            exit 1
+          fi
+
+          if echo "$body" | grep -q '"access_token"'; then
+            echo "OpenSea Wallet 1 authentication successful."
+          else
+            echo "Authentication response did not contain an access token."
+            exit 1
+          fi
