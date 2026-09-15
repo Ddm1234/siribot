@@ -1,0 +1,55 @@
+name: OpenSea Eligibility Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test Wallet 1 eligibility
+        env:
+          OPENSEA_WALLET1_PAT: ${{ secrets.OPENSEA_WALLET1_PAT }}
+          OPENSEA_SIRI_API_KEY: ${{ secrets.OPENSEA_SIRI_API_KEY }}
+        run: |
+          response=$(curl -sS -w '\n%{http_code}' \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"subjectToken\":\"$OPENSEA_WALLET1_PAT\",\"subjectTokenType\":\"ACCESS_TOKEN\"}" \
+            https://api.opensea.io/api/v2/auth/tokens/exchange)
+
+          status=$(echo "$response" | tail -n 1)
+          body=$(echo "$response" | sed '$d')
+
+          if [ "$status" != "200" ]; then
+            echo "OpenSea authentication failed. HTTP status: $status"
+            exit 1
+          fi
+
+          access_token=$(echo "$body" | jq -r '.accessToken')
+
+          if [ -z "$access_token" ] || [ "$access_token" = "null" ]; then
+            echo "No access token returned."
+            exit 1
+          fi
+
+          echo "Wallet authentication successful."
+
+          eligibility=$(curl -sS -w '\n%{http_code}' \
+            -H "X-API-KEY: $OPENSEA_SIRI_API_KEY" \
+            -H "Authorization: Bearer $access_token" \
+            "https://api.opensea.io/api/v2/drops/ordem/eligibility")
+
+          eligibility_status=$(echo "$eligibility" | tail -n 1)
+          eligibility_body=$(echo "$eligibility" | sed '$d')
+
+          echo "Eligibility HTTP status: $eligibility_status"
+
+          if [ "$eligibility_status" != "200" ]; then
+            echo "Eligibility request failed."
+            exit 1
+          fi
+
+          echo "Wallet 1 eligibility response:"
+          echo "$eligibility_body" | jq .
