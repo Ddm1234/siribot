@@ -1,0 +1,17 @@
+{
+  "name": "nft-mint-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@opensea/sdk": "^12.8.0",
+    "viem": "^2.56.5"
+  },
+  "type": "module"
+}

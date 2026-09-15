@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+wallets.json
+*.key
+*.pem
+nft-contract/cache/
+nft-contract/out/
+nft-contract/lib/
