@@ -29,7 +29,7 @@ jobs:
           DISCORD_WEBHOOK_SIRI: ${{ secrets.DISCORD_WEBHOOK_SIRI }}
           DISCORD_WEBHOOK_DHARAM: ${{ secrets.DISCORD_WEBHOOK_DHARAM }}
         run: |
-          node opensea-tracker.js
+          node opensea-tracker.cjs
 
       - name: Save notification state
         run: |
