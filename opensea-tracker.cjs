@@ -162,6 +162,7 @@ function stageLabel(stage) {
 function dropName(drop) {
   return (
     drop.name ||
+    drop.collection_name ||
     drop.collectionName ||
     drop.collection?.name ||
     'Unknown OpenSea drop'
@@ -357,15 +358,37 @@ async function sendDiscord(wallet, notification) {
     ],
   };
 
-  const response = await fetch(wallet.webhook, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const response = await fetch(wallet.webhook, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
+    if (response.ok) {
+      return;
+    }
+
+    if (response.status === 429 && attempt < 4) {
+      let waitMs = 5000;
+
+      try {
+        const data = await response.json();
+        if (data.retry_after !== undefined) {
+          waitMs = Math.ceil(Number(data.retry_after) * 1000) + 1000;
+        }
+      } catch {}
+
+      console.log(
+        `[${wallet.name}] Discord rate limited. Waiting ${waitMs}ms before retry ${attempt + 1}/4`
+      );
+
+      await new Promise(resolve => setTimeout(resolve, waitMs));
+      continue;
+    }
+
     throw new Error(
       `${wallet.name} Discord notification failed: HTTP ${response.status}`
     );
