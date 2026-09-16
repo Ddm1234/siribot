@@ -368,6 +368,7 @@ async function checkWallet(wallet, accessToken, drops) {
           eligible.uuid;
 
         const stage = findStage(details, eligibleId);
+        console.log(`[${wallet.name}] ${slug} eligible stage:`, JSON.stringify({ id: eligibleId, label: stage?.label, type: stage?.stage_type || stage?.stageType, isPrivate: isPrivateStage(stage) }));
 
         if (!isPrivateStage(stage)) {
           continue;
