@@ -1,0 +1,26 @@
+name: OpenSea WL Tracker
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run OpenSea tracker
+        env:
+          OPENSEA_WALLET1_PAT: ${{ secrets.OPENSEA_WALLET1_PAT }}
+          OPENSEA_WALLET2_PAT: ${{ secrets.OPENSEA_WALLET2_PAT }}
+          OPENSEA_SIRI_API_KEY: ${{ secrets.OPENSEA_SIRI_API_KEY }}
+          OPENSEA_DHARAM_API_KEY: ${{ secrets.OPENSEA_DHARAM_API_KEY }}
+          DISCORD_WEBHOOK_SIRI: ${{ secrets.DISCORD_WEBHOOK_SIRI }}
+          DISCORD_WEBHOOK_DHARAM: ${{ secrets.DISCORD_WEBHOOK_DHARAM }}
+        run: |
+          node opensea-tracker.js
