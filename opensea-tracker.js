@@ -351,6 +351,7 @@ async function checkWallet(wallet, accessToken, drops) {
         slug
       );
 
+      console.log(`[${wallet.name}] ${slug} eligibility keys:`, Object.keys(eligibility).join(", "));
       const eligibleStages =
         eligibility.stages ||
         eligibility.eligibleStages ||
