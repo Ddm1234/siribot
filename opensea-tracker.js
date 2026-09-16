@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const OPENSEA_API = 'https://api.opensea.io/api/v2';
 
 const WALLETS = [
@@ -267,6 +269,24 @@ async function getWalletEligibility(wallet, accessToken, dropSlug) {
   );
 }
 
+function loadNotifiedState() {
+  const file = path.join(__dirname, '.state', 'notified.json');
+
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function notificationKey(wallet, notification) {
+  return [
+    wallet.address.toLowerCase(),
+    notification.slug,
+    notification.phase,
+  ].join('|');
+}
+
 async function sendDiscord(wallet, notification) {
   required(wallet.webhook, `${wallet.name} Discord webhook`);
 
@@ -463,13 +483,42 @@ async function main() {
       `[${wallet.name}] private eligible stages found: ${notifications.length}`
     );
 
+    const notifiedState = loadNotifiedState();
+    let stateChanged = false;
+
     for (const notification of notifications) {
+      const key = notificationKey(wallet, notification);
+
+      if (notifiedState[key]) {
+        console.log(
+          `[${wallet.name}] Already notified: ${notification.name} | ${notification.phase}`
+        );
+        continue;
+      }
+
       console.log(
-        `[${wallet.name}] ${notification.name} | ${notification.phase}`
+        `[${wallet.name}] Sending Discord notification: ${notification.name} | ${notification.phase}`
       );
 
-      // Notification sending will be connected to persistent
-      // deduplication state in the GitHub Actions workflow.
+      await sendDiscord(wallet, notification);
+
+      notifiedState[key] = {
+        sentAt: new Date().toISOString(),
+        name: notification.name,
+        phase: notification.phase,
+        chain: notification.chain,
+        slug: notification.slug,
+      };
+
+      stateChanged = true;
+    }
+
+    if (stateChanged) {
+      fs.writeFileSync(
+        path.join(__dirname, '.state', 'notified.json'),
+        JSON.stringify(notifiedState, null, 2) + '\n'
+      );
+      console.log(`[${wallet.name}] Notification state updated`);
     }
   }
 
