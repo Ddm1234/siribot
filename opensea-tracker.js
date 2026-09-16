@@ -358,6 +358,8 @@ async function checkWallet(wallet, accessToken, drops) {
         wallet.apiKey
       );
 
+      console.log(`[Chain] ${slug}: ${dropChain(details)}`);
+
       const eligibility = await getWalletEligibility(
         wallet,
         accessToken,
