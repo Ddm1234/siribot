@@ -425,6 +425,10 @@ async function checkWallet(wallet, accessToken, drops) {
         [];
 
       for (const eligible of eligibleStages) {
+        if (eligible.is_eligible !== true) {
+          continue;
+        }
+
         const eligibleId =
           eligible.stageId ||
           eligible.stage_id ||
