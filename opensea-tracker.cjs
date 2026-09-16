@@ -284,12 +284,19 @@ function notificationKey(wallet, notification) {
   return [
     wallet.address.toLowerCase(),
     notification.slug,
-    notification.phase,
   ].join('|');
 }
 
 async function sendDiscord(wallet, notification) {
   required(wallet.webhook, `${wallet.name} Discord webhook`);
+
+  const phaseText = notification.phases
+    .map(
+      phase =>
+        `**${phase.name}**\nPrice: ${phase.price}\nMax: ${phase.maxPerWallet}\nSchedule: ${phase.schedule}`
+    )
+    .join('\n\n')
+    .slice(0, 1024);
 
   const fields = [
     {
@@ -298,29 +305,14 @@ async function sendDiscord(wallet, notification) {
       inline: false,
     },
     {
-      name: 'WL Phase',
-      value: notification.phase,
-      inline: true,
+      name: 'WL Phase(s)',
+      value: phaseText || 'Private / WL',
+      inline: false,
     },
     {
       name: 'Chain',
       value: notification.chain,
       inline: true,
-    },
-    {
-      name: 'Price',
-      value: notification.price,
-      inline: true,
-    },
-    {
-      name: 'Max Per Wallet',
-      value: notification.maxPerWallet,
-      inline: true,
-    },
-    {
-      name: 'Schedule',
-      value: notification.schedule,
-      inline: false,
     },
   ];
 
@@ -351,9 +343,7 @@ async function sendDiscord(wallet, notification) {
         description:
           `Wallet **${wallet.name}** is eligible for a private OpenSea mint phase.`,
         fields,
-        thumbnail: notification.image
-          ? { url: notification.image }
-          : undefined,
+        thumbnail: undefined,
       },
     ],
   };
@@ -396,11 +386,12 @@ async function sendDiscord(wallet, notification) {
 }
 
 async function checkWallet(wallet, accessToken, drops) {
-  const notifications = [];
+  const projects = new Map();
 
   for (const summaryDrop of drops) {
     const slug =
-      summaryDrop.collection_slug || summaryDrop.slug ||
+      summaryDrop.collection_slug ||
+      summaryDrop.slug ||
       summaryDrop.collectionSlug ||
       summaryDrop.collection?.slug;
 
@@ -425,9 +416,7 @@ async function checkWallet(wallet, accessToken, drops) {
         [];
 
       for (const eligible of eligibleStages) {
-        if (eligible.is_eligible !== true) {
-          continue;
-        }
+        if (eligible.is_eligible !== true) continue;
 
         const eligibleId =
           eligible.stageId ||
@@ -438,19 +427,24 @@ async function checkWallet(wallet, accessToken, drops) {
 
         const stage = findStage(details, eligibleId);
 
-        if (!isPrivateStage(stage)) {
-          continue;
+        if (!isPrivateStage(stage)) continue;
+
+        if (!projects.has(slug)) {
+          projects.set(slug, {
+            name: dropName(details),
+            chain: dropChain(details),
+            slug,
+            url: dropUrl(details),
+            website: projectWebsite(details),
+            twitter: projectSocial(details),
+            phases: [],
+          });
         }
 
-        notifications.push({
-          name: dropName(details),
-          chain: dropChain(details),
-          slug,
-          url: dropUrl(details),
-          image: dropImage(details),
-          website: projectWebsite(details),
-          twitter: projectSocial(details),
-          phase: stageLabel(stage),
+        const project = projects.get(slug);
+
+        const phase = {
+          name: stageLabel(stage),
           price: formatPrice(stage),
           maxPerWallet: String(
             stage.maxPerWallet ??
@@ -460,7 +454,11 @@ async function checkWallet(wallet, accessToken, drops) {
               'Unavailable'
           ),
           schedule: scheduleText(stage),
-        });
+        };
+
+        if (!project.phases.some(p => p.name === phase.name)) {
+          project.phases.push(phase);
+        }
       }
     } catch (error) {
       console.log(
@@ -469,9 +467,8 @@ async function checkWallet(wallet, accessToken, drops) {
     }
   }
 
-  return notifications;
+  return [...projects.values()];
 }
-
 async function main() {
   console.log('OpenSea WL Tracker started');
   console.log('Read-only mode: no minting or transactions');
@@ -507,7 +504,7 @@ async function main() {
     );
 
     console.log(
-      `[${wallet.name}] private eligible stages found: ${notifications.length}`
+      `[${wallet.name}] private eligible projects found: ${notifications.length}`
     );
 
     const notifiedState = loadNotifiedState();
@@ -518,13 +515,13 @@ async function main() {
 
       if (notifiedState[key]) {
         console.log(
-          `[${wallet.name}] Already notified: ${notification.name} | ${notification.phase}`
+          `[${wallet.name}] Already notified: ${notification.name}`
         );
         continue;
       }
 
       console.log(
-        `[${wallet.name}] Sending Discord notification: ${notification.name} | ${notification.phase}`
+        `[${wallet.name}] Sending Discord notification: ${notification.name}`
       );
 
       await sendDiscord(wallet, notification);
@@ -532,7 +529,7 @@ async function main() {
       notifiedState[key] = {
         sentAt: new Date().toISOString(),
         name: notification.name,
-        phase: notification.phase,
+        phases: notification.phases,
         chain: notification.chain,
         slug: notification.slug,
       };
