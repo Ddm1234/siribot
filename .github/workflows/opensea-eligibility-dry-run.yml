@@ -20,8 +20,8 @@ jobs:
           OPENSEA_WALLET2_PAT: ${{ secrets.OPENSEA_WALLET2_PAT }}
           OPENSEA_SIRI_API_KEY: ${{ secrets.OPENSEA_SIRI_API_KEY }}
           OPENSEA_DHARAM_API_KEY: ${{ secrets.OPENSEA_DHARAM_API_KEY }}
-          DISCORD_WEBHOOK_SIRI: ""
-          DISCORD_WEBHOOK_DHARAM: ""
+          DISCORD_WEBHOOK_SIRI: "dry-run"
+          DISCORD_WEBHOOK_DHARAM: "dry-run"
           DRY_RUN: "true"
         run: |
           cp opensea-tracker.cjs /tmp/opensea-tracker-dry.cjs
