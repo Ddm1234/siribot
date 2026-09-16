@@ -282,6 +282,11 @@ async function sendDiscord(wallet, notification) {
       inline: true,
     },
     {
+      name: 'Chain',
+      value: notification.chain,
+      inline: true,
+    },
+    {
       name: 'Price',
       value: notification.price,
       inline: true,
