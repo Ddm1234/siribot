@@ -333,7 +333,7 @@ async function checkWallet(wallet, accessToken, drops) {
 
   for (const summaryDrop of drops) {
     const slug =
-      summaryDrop.slug ||
+      summaryDrop.collection_slug || summaryDrop.slug ||
       summaryDrop.collectionSlug ||
       summaryDrop.collection?.slug;
 
