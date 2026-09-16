@@ -111,7 +111,7 @@ function findStage(drop, stageId) {
   const wanted = normalizeId(stageId);
 
   return (drop.stages || []).find(
-    stage => normalizeId(stage.stageId || stage.id || stage.uuid) === wanted
+    stage => normalizeId(stage.stageId || stage.id || stage.uuid || stage.stage_uuid) === wanted
   );
 }
 
