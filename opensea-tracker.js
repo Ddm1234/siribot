@@ -167,7 +167,7 @@ function dropName(drop) {
 }
 
 function dropChain(drop) {
-  return (
+  const chain =
     drop.chain ||
     drop.chainName ||
     drop.chain_name ||
@@ -175,8 +175,14 @@ function dropChain(drop) {
     drop.collection?.chain ||
     drop.collection?.chainName ||
     drop.collection?.chain_name ||
-    'Unknown'
-  );
+    'Unknown';
+
+  const names = {
+    ethereum: 'Ethereum',
+    robinhood: 'Robinhood',
+  };
+
+  return names[String(chain).toLowerCase()] || String(chain);
 }
 
 function dropImage(drop) {
@@ -357,8 +363,6 @@ async function checkWallet(wallet, accessToken, drops) {
         `/drops/${encodeURIComponent(slug)}`,
         wallet.apiKey
       );
-
-      console.log(`[Chain] ${slug}: ${dropChain(details)}`);
 
       const eligibility = await getWalletEligibility(
         wallet,
