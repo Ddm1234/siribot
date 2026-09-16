@@ -1,0 +1,50 @@
+name: OpenSea Eligibility Dry Run
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run read-only eligibility test
+        env:
+          OPENSEA_WALLET1_PAT: ${{ secrets.OPENSEA_WALLET1_PAT }}
+          OPENSEA_WALLET2_PAT: ${{ secrets.OPENSEA_WALLET2_PAT }}
+          OPENSEA_SIRI_API_KEY: ${{ secrets.OPENSEA_SIRI_API_KEY }}
+          OPENSEA_DHARAM_API_KEY: ${{ secrets.OPENSEA_DHARAM_API_KEY }}
+          DISCORD_WEBHOOK_SIRI: ""
+          DISCORD_WEBHOOK_DHARAM: ""
+          DRY_RUN: "true"
+        run: |
+          cp opensea-tracker.cjs /tmp/opensea-tracker-dry.cjs
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path("/tmp/opensea-tracker-dry.cjs")
+          s = p.read_text()
+
+          old = "      await sendDiscord(wallet, notification);"
+
+          new = """      if (process.env.DRY_RUN === "true") {
+            console.log("[DRY RUN] Would notify:", JSON.stringify(notification, null, 2));
+          } else {
+            await sendDiscord(wallet, notification);
+          }"""
+
+          if old not in s:
+              raise SystemExit("Could not find Discord send call")
+
+          p.write_text(s.replace(old, new, 1))
+          PY
+
+          node --check /tmp/opensea-tracker-dry.cjs
+          node /tmp/opensea-tracker-dry.cjs
