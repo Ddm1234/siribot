@@ -166,6 +166,19 @@ function dropName(drop) {
   );
 }
 
+function dropChain(drop) {
+  return (
+    drop.chain ||
+    drop.chainName ||
+    drop.chain_name ||
+    drop.network ||
+    drop.collection?.chain ||
+    drop.collection?.chainName ||
+    drop.collection?.chain_name ||
+    'Unknown'
+  );
+}
+
 function dropImage(drop) {
   return (
     drop.imageUrl ||
@@ -373,6 +386,7 @@ async function checkWallet(wallet, accessToken, drops) {
 
         notifications.push({
           name: dropName(details),
+          chain: dropChain(details),
           slug,
           url: dropUrl(details),
           image: dropImage(details),
