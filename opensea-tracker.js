@@ -351,9 +351,6 @@ async function checkWallet(wallet, accessToken, drops) {
         slug
       );
 
-      console.log(`[${wallet.name}] ${slug} eligibility keys:`, Object.keys(eligibility).join(", "));
-    console.log(`[${wallet.name}] ${slug} stages:`, JSON.stringify(eligibility.stages));
-    console.log(`[${wallet.name}] ${slug} drop stages:`, JSON.stringify(details.stages));
       const eligibleStages =
         eligibility.stages ||
         eligibility.eligibleStages ||
@@ -369,7 +366,6 @@ async function checkWallet(wallet, accessToken, drops) {
           eligible.uuid;
 
         const stage = findStage(details, eligibleId);
-        console.log(`[${wallet.name}] ${slug} match:`, JSON.stringify({ eligibleId, dropStageIds: (details.stages || []).map(s => s.uuid || s.stage_uuid || s.id || s.stageId), matched: stage ? { id: stage.uuid || stage.stage_uuid || stage.id || stage.stageId, label: stage.label, type: stage.stage_type || stage.stageType } : null }));
 
         if (!isPrivateStage(stage)) {
           continue;
