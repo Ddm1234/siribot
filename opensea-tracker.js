@@ -364,6 +364,7 @@ async function checkWallet(wallet, accessToken, drops) {
         const eligibleId =
           eligible.stageId ||
           eligible.stage_id ||
+          eligible.stage_uuid ||
           eligible.id ||
           eligible.uuid;
 
