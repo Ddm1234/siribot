@@ -425,6 +425,7 @@ async function main() {
   const drops = await getUpcomingDrops(discoveryKey);
 
   console.log(`Upcoming drops discovered: ${drops.length}`);
+  console.log("First drop keys:", Object.keys(drops[0] || {}).join(", "));
 
   for (const wallet of activeWallets) {
     const notifications = await checkWallet(
