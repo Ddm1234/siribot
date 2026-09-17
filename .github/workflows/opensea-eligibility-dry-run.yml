@@ -47,4 +47,26 @@ jobs:
           PY
 
           node --check /tmp/opensea-tracker-dry.cjs
+          python3 - <<'PY2'
+          from pathlib import Path
+
+          p = Path("/tmp/opensea-tracker-dry.cjs")
+          s = p.read_text()
+
+          marker = "  console.log(`Upcoming drops discovered: ${drops.length}`);"
+          replacement = '''  console.log(`Upcoming drops discovered: ${drops.length}`);
+  console.log("[DRY RUN] Upcoming drops:");
+  for (const drop of drops) {
+    console.log(
+      `- ${drop.collection_name || drop.name || "Unknown"} | ${drop.collection_slug || drop.slug || "no-slug"}`
+    );
+  }'''
+
+          if marker not in s:
+              raise SystemExit("Could not find drop-count log")
+
+          p.write_text(s.replace(marker, replacement, 1))
+          PY2
+
+          node --check /tmp/opensea-tracker-dry.cjs
           node /tmp/opensea-tracker-dry.cjs
