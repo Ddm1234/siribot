@@ -390,5 +390,19 @@
     "phase": "OH NFT + PFP Holders",
     "chain": "Ethereum",
     "slug": "hard-headed"
+  },
+  "0xce255af73049a3402a500b4cbb2efdbeddd0c998|jpeg-frens": {
+    "sentAt": "2026-09-22T01:14:40.800Z",
+    "name": "JPEG Frens",
+    "phases": [
+      {
+        "name": "FREN FRENZY",
+        "price": "6942000000000000000000",
+        "maxPerWallet": "10",
+        "schedule": "2026-09-23T20:00:00Z → 2026-09-23T21:30:00Z"
+      }
+    ],
+    "chain": "Ethereum",
+    "slug": "jpeg-frens"
   }
 }
