@@ -418,5 +418,25 @@
     ],
     "chain": "Robinhood",
     "slug": "early-men-origins"
+  },
+  "0xce255af73049a3402a500b4cbb2efdbeddd0c998|eternal-blades-world": {
+    "sentAt": "2026-09-27T17:38:29.330Z",
+    "name": "Eternal Blades",
+    "phases": [
+      {
+        "name": "GTD ",
+        "price": "170000000000000000000",
+        "maxPerWallet": "2",
+        "schedule": "2026-09-29T16:00:00Z → 2026-09-29T18:00:00Z"
+      },
+      {
+        "name": "FCFS(Eligible Communities)",
+        "price": "170000000000000000000",
+        "maxPerWallet": "2",
+        "schedule": "2026-09-29T18:00:00Z → 2026-09-29T21:00:00Z"
+      }
+    ],
+    "chain": "ape_chain",
+    "slug": "eternal-blades-world"
   }
 }
