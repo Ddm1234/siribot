@@ -438,5 +438,19 @@
     ],
     "chain": "ape_chain",
     "slug": "eternal-blades-world"
+  },
+  "0xce255af73049a3402a500b4cbb2efdbeddd0c998|ottoclubhouse": {
+    "sentAt": "2026-09-28T21:54:14.414Z",
+    "name": "OTTO CLUB HOUSE",
+    "phases": [
+      {
+        "name": "FCFS",
+        "price": "88000000000000000",
+        "maxPerWallet": "3",
+        "schedule": "2026-10-03T21:00:00Z → 2026-10-03T22:30:00Z"
+      }
+    ],
+    "chain": "Ethereum",
+    "slug": "ottoclubhouse"
   }
 }
