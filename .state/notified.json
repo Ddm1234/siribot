@@ -452,5 +452,19 @@
     ],
     "chain": "Ethereum",
     "slug": "ottoclubhouse"
+  },
+  "0x273a9814591076e6e0e5f60715e5ece252c23374|franky-blind-box": {
+    "sentAt": "2026-09-30T15:05:24.140Z",
+    "name": "First Edition Franky Blind Box",
+    "phases": [
+      {
+        "name": "Fox Plushy & Friends",
+        "price": "16700000000000000",
+        "maxPerWallet": "1000",
+        "schedule": "2026-09-30T23:00:00Z → 2026-10-01T01:00:00Z"
+      }
+    ],
+    "chain": "Ethereum",
+    "slug": "franky-blind-box"
   }
 }
