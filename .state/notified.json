@@ -480,5 +480,25 @@
     ],
     "chain": "Ethereum",
     "slug": "accretion"
+  },
+  "0xce255af73049a3402a500b4cbb2efdbeddd0c998|zero-to-hero-academy": {
+    "sentAt": "2026-10-12T22:54:27.994Z",
+    "name": "Zero to Hero Academy",
+    "phases": [
+      {
+        "name": "GTD",
+        "price": "17000000000000000",
+        "maxPerWallet": "1",
+        "schedule": "2026-10-13T16:30:00Z → 2026-10-13T18:30:00Z"
+      },
+      {
+        "name": "FCFS",
+        "price": "17000000000000000",
+        "maxPerWallet": "1",
+        "schedule": "2026-10-13T18:30:00Z → 2026-10-13T20:00:00Z"
+      }
+    ],
+    "chain": "Robinhood",
+    "slug": "zero-to-hero-academy"
   }
 }
