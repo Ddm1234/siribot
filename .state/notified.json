@@ -500,5 +500,19 @@
     ],
     "chain": "Robinhood",
     "slug": "zero-to-hero-academy"
+  },
+  "0xce255af73049a3402a500b4cbb2efdbeddd0c998|mindsdotgames": {
+    "sentAt": "2026-10-13T10:48:08.845Z",
+    "name": "Minds Dot Games",
+    "phases": [
+      {
+        "name": "FCFS Whitelist",
+        "price": "12500000000000000",
+        "maxPerWallet": "2",
+        "schedule": "2026-10-14T15:00:00Z → 2026-10-14T17:00:00Z"
+      }
+    ],
+    "chain": "Robinhood",
+    "slug": "mindsdotgames"
   }
 }
