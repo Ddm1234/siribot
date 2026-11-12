@@ -514,5 +514,25 @@
     ],
     "chain": "Robinhood",
     "slug": "mindsdotgames"
+  },
+  "0xce255af73049a3402a500b4cbb2efdbeddd0c998|lil-giraffies-club": {
+    "sentAt": "2026-11-12T23:41:11.665Z",
+    "name": "Lil Giraffies Club",
+    "phases": [
+      {
+        "name": "GTD",
+        "price": "0",
+        "maxPerWallet": "1",
+        "schedule": "2026-11-13T15:15:00Z → 2026-11-13T16:15:00Z"
+      },
+      {
+        "name": "FCFS",
+        "price": "0",
+        "maxPerWallet": "1",
+        "schedule": "2026-11-13T16:15:00Z → 2026-11-13T17:15:00Z"
+      }
+    ],
+    "chain": "Robinhood",
+    "slug": "lil-giraffies-club"
   }
 }
